@@ -10,7 +10,7 @@ server.listen(port, function() {
     console.log("Server Live");
 });
 
-app.use('static', express.static(__dirname + '/static'))
+app.use(express.static(__dirname + '/static'))
 app.use('*', function(req, res) {
     res.sendFile(__dirname + '/index.html')
 });

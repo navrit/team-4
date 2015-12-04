@@ -1,5 +1,7 @@
+var GoogleMapsLoader = require('google-maps');
 var map;
-function initMap() {
+
+GoogleMapsLoader.load(function(google) {
     map = new google.maps.Map(document.getElementById('map'), {
         center: {
             lat: 23.51033,
@@ -7,6 +9,4 @@ function initMap() {
         },
         zoom: 8
     });
-
-    // INSERT YOUR CODE HERE
-}
+});
