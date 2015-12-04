@@ -26,6 +26,7 @@
     "angular-ui-router": "^0.2.15",
     "autoprefixer": "^6.0.3",
     "css-loader": "^0.21.0",
+    "d3": "^3.5.10",
     "extract-text-webpack-plugin": "^0.8.2",
     "google-maps": "^3.1.0",
     "ng-annotate-webpack-plugin": "^0.1.2",

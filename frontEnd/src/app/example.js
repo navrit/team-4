@@ -1,4 +1,4 @@
-[
+module.exports = [
     {
         "location": {
             "lat": "23.51033",
