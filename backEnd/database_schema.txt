@@ -1,5 +1,5 @@
 CREATE TABLE data (
-time       DATETIME NOT NULL,
+time       TIMESTAMP NOT NULL DEFAULT NOW(),
 name       CHAR(40),
 age        SMALLINT(3) UNSIGNED,
 location   CHAR(40) not null,
