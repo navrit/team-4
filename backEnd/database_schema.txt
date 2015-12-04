@@ -1,0 +1,11 @@
+CREATE TABLE data(
+time       TIMESTAMP NOT NULL DEFAULT NOW(),
+name       CHAR(40),
+age        UNSIGNED SMALLINT,
+location   CHAR(40) NOT NULL,
+phone      CHAR(20) NOT NULL,
+condition  VARCHAR NOT NULL,
+categories VARCHAR NOT NULL);
+
+
+
