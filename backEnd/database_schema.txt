@@ -1,11 +1,11 @@
-CREATE TABLE data(
-time       TIMESTAMP NOT NULL DEFAULT NOW(),
+CREATE TABLE data (
+time       DATETIME NOT NULL,
 name       CHAR(40),
-age        UNSIGNED SMALLINT,
-location   CHAR(40) NOT NULL,
-phone      CHAR(20) NOT NULL,
-condition  VARCHAR NOT NULL,
-categories VARCHAR NOT NULL);
+age        SMALLINT(3) UNSIGNED,
+location   CHAR(40) not null,
+phone      CHAR(20) not null,
+conds      VARCHAR(128),
+condtype   VARCHAR(512));
 
 
 
