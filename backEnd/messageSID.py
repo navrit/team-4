@@ -1,5 +1,5 @@
 from twilio.rest import TwilioRestClient
-#import MySQLdb as mdb
+import MySQLdb as mdb
 import datetime
 import re
 
@@ -33,21 +33,12 @@ def fileHandling():
 
 def parse(text):
     # PARSE IT WITH REGEX >> ars;23;Uganda..... --> Name:ars Age:23 Location:Uganda
-<<<<<<< HEAD
     
-    dataList = re.split(r';{1,}', text)
-    dataList = [re.sub(r'\n', ' ', attributes) for attributes in dataList]
+    dataList = re.split(r';{1,}', text) #Puts text into a list where each element is seperated by ;
+    dataList = [re.sub(r'\n', ' ', attributes) for attributes in dataList] #Gets rid of unwanted newline chars.
 
     return dataList
-=======
-    name = text.split(";")[0]
-    age = text.split(";")[1]
-    location = text.split(";")[2]
-    phone = text.split(";")[3]
-    issues = text.split(";")[4]
-    condtype = text.split(";")[5]
-    return name, age, location, phone, issues, condtype
->>>>>>> b31366f185dd4855c6bdf60980bff2ebdfbde521
+
 
 def inject(text):
     db = mdb.connect('127.0.0.1','root','jpmorgan','codeforgood')
