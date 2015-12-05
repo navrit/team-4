@@ -33,11 +33,21 @@ def fileHandling():
 
 def parse(text):
     # PARSE IT WITH REGEX >> ars;23;Uganda..... --> Name:ars Age:23 Location:Uganda
+<<<<<<< HEAD
     
     dataList = re.split(r';{1,}', text)
     dataList = [re.sub(r'\n', ' ', attributes) for attributes in dataList]
 
     return dataList
+=======
+    name = text.split(";")[0]
+    age = text.split(";")[1]
+    location = text.split(";")[2]
+    phone = text.split(";")[3]
+    issues = text.split(";")[4]
+    condtype = text.split(";")[5]
+    return name, age, location, phone, issues, condtype
+>>>>>>> b31366f185dd4855c6bdf60980bff2ebdfbde521
 
 def inject(text):
     db = mdb.connect('127.0.0.1','root','jpmorgan','codeforgood')
@@ -46,9 +56,6 @@ def inject(text):
     print text
     time, name, age, location, phone, issue, condtypes = parse(text)
     ''' SAMPLE DATA
-    time = "2015-12-03T21:10:29.000Z"
-    time = datetime.datetime.strptime( time, "%Y-%m-%dT%H:%M:%S.000Z" ) # Quick fix LOOK HERE - you need to parse this out for MySQL - no Timezone shizzle
-    # Goes to a native Python datetime, lookup the format (it's very human readable)
     name = "Augustus"
     age = "14"
     location = "Uganda High Commission, Nairobi, Kenya"
@@ -56,7 +63,7 @@ def inject(text):
     issue = "No braille access at work"
     condtype = "Visually impaired, wheelchair" '''
     # Inject into database
-    query = "INSERT INTO codeforgood.data VALUES('{}','{}','{}','{}','{}','{}','{}');".format(time, name, age, location, phone, issue, condtype)
+    query = "INSERT INTO codeforgood.data VALUES('{}','{}','{}','{}','{}','{}');".format(name, age, location, phone, issue, condtype)
     cursor.execute(query)
     db.commit()
     print ">> SUCCESS: New data in DB"
