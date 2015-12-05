@@ -20,7 +20,7 @@ def queryfrom(time):
 
 @app.route('/sms', methods=['POST'])
 def sms():
-  return "sms"
+    return "sms"
 
 if __name__ == "__main__":
-  app.run(host='0.0.0.0', port=8888)
+    app.run(host='0.0.0.0', port=8888)
