@@ -21,7 +21,7 @@ def fileHandling():
     	if((newSID.sid+"\n") != firstSID):# If there's a new one, call parse and inject functions
     		inject(newSID.body)
     	else:
-    		pass
+    		break
 
     writer = open("messageSID.txt", "w") # Update our now out of date messages list.
 
@@ -37,15 +37,28 @@ def parse(text):
     dataList = re.split(r';{1,}', text) #Puts text into a list where each element is seperated by ;
     dataList = [re.sub(r'\n', ' ', attributes) for attributes in dataList] #Gets rid of unwanted newline chars.
 
-    return dataList
+    name = dataList[0]
+    age = dataList[1]
+    location= dataList[2]
+    phone = dataList[3]
+    issue = dataList[4]
+    condtype = dataList[5]
+    return name, age, location, phone, issue, condtype
 
+def unpack(a, b, c, d, e, f, *rest):
+  return a, b, c, d, e, f, rest
 
 def inject(text):
     db = mdb.connect('127.0.0.1','root','jpmorgan','codeforgood')
     cursor = db.cursor()
     # Parse then inject into database
     print text
-    name, age, location, phone, issue, condtype = parse(text)
+    try:
+      name, age, location, phone, issue, condtype = parse(text)
+    except Exception as e:
+      print "Exception while parsing"
+      print e
+      return
     ''' SAMPLE DATA
     name = "Augustus"
     age = "14"
@@ -54,8 +67,16 @@ def inject(text):
     issue = "No braille access at work"
     condtype = "Visually impaired, wheelchair" '''
     # Inject into database
-    query = "INSERT INTO codeforgood.data(name, age, location, phone, issues, condtype) VALUES('{}','{}','{}','{}','{}','{}');".format(name, age, location, phone, issue, condtype)
-    print query
-    cursor.execute(query)
+    query = "INSERT INTO codeforgood.data(name, age, location, phone, issues, condtype) VALUES(%s, %s, %s, %s, %s, %s);"
+    try:
+      cursor.execute(query, [name, age, location, phone, issue, condtype])
+    except Exception as e:
+      print "Exception while inserting"
+      print e
+      return
     db.commit()
     print ">> SUCCESS: New data in DB"
+
+if __name__ == '__main__':
+  print "running"
+  fileHandling()
