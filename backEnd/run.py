@@ -1,17 +1,14 @@
 from flask import Flask
 app = Flask(__name__)
 
-@app.route("/query")
-def query():
-  return "query"
-
 @app.route("/")
 def start():
   return "Hello World!"
 
 @app.route('/query', methods=['GET'])
 def query():
-  return "query"
+  f = open('example.json', 'r')
+  return f.read()
 
 @app.route('/sms', methods=['POST'])
 def sms():
