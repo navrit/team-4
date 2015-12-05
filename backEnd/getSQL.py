@@ -25,7 +25,7 @@ import pandas as pd
 
 class SQLObject:
     def __init__(self, query="SELECT * FROM codeforgood.data;"):
-        self.db = mdb.connect('127.0.0.1','root','jpmorgan','data')
+        self.db = mdb.connect('127.0.0.1','root','jpmorgan','codeforgood')
         self.cursor = self.db.cursor()
         self.query = query
 
