@@ -9,7 +9,12 @@ $black: black;
 }
 
 .padded {
-    margin-bottom: 20px;
+    background: #f54700;
+    padding-bottom: 20px;
+    color: white;
+    padding-top: 20px;
+    padding-left: 10px;
+    border-radius: 3px;
 }
 
 .container {
