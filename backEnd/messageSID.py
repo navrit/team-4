@@ -11,10 +11,14 @@ messages = client.messages.list()
 #Open filestream to current messagesSID.txt file.
 oldSID = open("messageSID.txt", "r")
 
+firstSID = oldSID.readline()
+
 #Iterate through twilio's list of messageSIDs.
 for newSID in messages:
-	if((newSID.sid + "\n") != oldSID.readline()):#If there's a new one, print it
+	if((newSID.sid+"\n") != firstSID):#If there's a new one, print it
 		print newSID.body
+	else:
+		break
 
 
 writer = open("messageSID.txt", "w") #Update our now out of date messages list.
