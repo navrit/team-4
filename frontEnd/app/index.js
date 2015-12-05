@@ -1,3 +1,4 @@
+var CronJob     = require('cron').CronJob;
 var express     = require('express');
 
 var app         = express();
@@ -16,9 +17,10 @@ app.use('*', function(req, res) {
     res.sendFile(__dirname + '/index.html')
 });
 
+var newData;
 io.on('connection', function (socket) {
     request
-        .get('http://ec2-54-78-230-185.eu-west-1.compute.amazonaws.com:8080/query')
+        .get('http://ec2-54-78-230-185.eu-west-1.compute.amazonaws.com:8080/example')
         .end(function(err, res) {
             if (err) {
                 console.error(err);
@@ -27,3 +29,13 @@ io.on('connection', function (socket) {
             }
         });
 });
+
+new CronJob('*/3 * * * * *', function() {
+    if (io.sockets.sockets.length > 0) {
+        io.emit('update', {
+            message: "Hello World!"
+        });
+    } else {
+        console.log("No Connections");
+    }
+}, null, true, 'Europe/London');
