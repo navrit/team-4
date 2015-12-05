@@ -15,8 +15,9 @@ def start():
 
 @app.route('/query', methods=['GET'])
 def query():
-  f = open('example.json', 'r')
-  return f.read()
+  query = 'SELECT * FROM codeforgood.data'
+  sql = SQLObject(query)
+  return str(sql.get())
 
 @app.route('/queryfrom/<time>', methods=['GET'])
 def queryfrom(time):
