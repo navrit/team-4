@@ -23,10 +23,6 @@ Date.prototype.niceDate = function() {
 };
 
 function displayPoints(data) {
-    markers.forEach(function(marker) {
-        marker.setVisible(false);
-    });
-
     JSON.parse(data).forEach(function(issue) {
         issue.time = new Date(issue.time).niceDate();
         issue.conditions = issue.condtype.split(',').join(', ');
@@ -155,8 +151,8 @@ socket.on('data', function (data) {
     });
 });
 
- window.addEventListener("resize", function() {
-     plot.redraw();
+socket.on('update', function(data) {
+    displayPoints(data);
 });
 
 var app = angular.module('add', [])
