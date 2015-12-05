@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from flask import Flask
 from getSQL import SQLObject
 app = Flask(__name__)
