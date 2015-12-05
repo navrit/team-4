@@ -1,0 +1,208 @@
+@mixin font-stack() {
+    line-height: 1.33;
+    font-family: Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    margin-bottom: 6px;
+    color: black;
+}
+
+.plottable-colors-0 {
+    background-color: #5279c7;
+}
+
+.plottable-colors-1 {
+    background-color: #fd373e;
+}
+
+.plottable-colors-2 {
+    background-color: #63c261;
+}
+
+.plottable-colors-3 {
+    background-color: #fad419;
+}
+
+.plottable-colors-4 {
+    background-color: #2c2b6f;
+}
+
+.plottable-colors-5 {
+    background-color: #ff7939;
+}
+
+.plottable-colors-6 {
+    background-color: #db2e65;
+}
+
+.plottable-colors-7 {
+    background-color: #99ce50;
+}
+
+.plottable-colors-8 {
+    background-color: #962565;
+}
+
+.plottable-colors-9 {
+    background-color: #06cccc;
+}
+
+svg.plottable {
+    display: block;
+
+    pointer-events: visibleFill;
+}
+
+.plottable {
+    .background-fill {
+        pointer-events: none;
+
+        fill: none;
+    }
+    .bounding-box {
+        visibility: hidden;
+
+        fill: pink;
+    }
+    .label text {
+        @include font-stack();
+
+        fill: #32313f;
+    }
+    .bar-label-text-area text {
+        @include font-stack();
+
+        font-size: 14px;
+    }
+    .label-area text {
+        @include font-stack();
+
+        font-size: 14px;
+
+        fill: #32313f;
+    }
+    .light-label text {
+        fill: white;
+    }
+    .dark-label text {
+        fill: #32313f;
+    }
+    .axis-label text {
+        font-size: 10px;
+        font-weight: bold;
+        line-height: normal;
+
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+    .title-label text {
+        font-size: 20px;
+        font-weight: bold;
+    }
+    .axis {
+        line {
+            &.baseline, &.tick-mark {
+                stroke: #cccccc;
+                stroke-width: 1px;
+            }
+        }
+        text {
+            @include font-stack();
+
+            font-size: 12px;
+            font-weight: 200;
+            line-height: normal;
+
+            fill: #32313f;
+        }
+        .annotation-circle {
+            fill: white;
+            stroke: #cccccc;
+            stroke-width: 1px;
+        }
+        .annotation-line {
+            stroke: #cccccc;
+            stroke-width: 1px;
+        }
+        .annotation-rect {
+            fill: white;
+            stroke: #cccccc;
+            stroke-width: 1px;
+        }
+    }
+    .bar-plot .baseline {
+        stroke: #999999;
+    }
+    .gridlines line {
+        opacity: 0.25;
+
+        stroke: #3c3c3c;
+        stroke-width: 1px;
+    }
+    .selection-box-layer .selection-area {
+        fill: black;
+        fill-opacity: 0.03;
+        stroke: #cccccc;
+    }
+    .drag-box-layer {
+        &.x-resizable .drag-edge-lr {
+            cursor: ew-resize;
+        }
+        &.y-resizable .drag-edge-tb {
+            cursor: ns-resize;
+        }
+        &.x-resizable.y-resizable {
+            .drag-corner-tl {
+                cursor: nwse-resize;
+            }
+            .drag-corner-tr, .drag-corner-bl {
+                cursor: nesw-resize;
+            }
+            .drag-corner-br {
+                cursor: nwse-resize;
+            }
+        }
+        &.movable .selection-area {
+            cursor: move;
+            cursor:    -moz-grab;
+            cursor: -webkit-grab;
+            cursor:         grab;
+            &:active {
+                cursor:    -moz-grabbing;
+                cursor: -webkit-grabbing;
+                cursor:         grabbing;
+            }
+        }
+    }
+    .guide-line-layer line.guide-line {
+        stroke: $black;
+        stroke-width: 3px;
+    }
+    .drag-line-layer.enabled {
+        &.vertical line.drag-edge {
+            cursor: ew-resize;
+        }
+        &.horizontal line.drag-edge {
+            cursor: ns-resize;
+        }
+    }
+    .legend text {
+        @include font-stack();
+
+        font-size: 12px;
+        line-height: normal;
+
+        fill: #32313f;
+    }
+    .interpolated-color-legend rect.swatch-bounding-box {
+        fill: none;
+        stroke: #cccccc;
+        stroke-width: 1px;
+    }
+    .waterfall-plot line.connector {
+        stroke: #cccccc;
+        stroke-width: 1px;
+    }
+    .pie-plot .arc.outline {
+        stroke-linejoin: round;
+    }
+}

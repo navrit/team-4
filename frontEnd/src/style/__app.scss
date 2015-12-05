@@ -1,0 +1,14 @@
+$black: black;
+
+@import "plottable";
+@import "toast";
+
+.map {
+    height: 500px;
+    height: 100vh;
+}
+
+.container {
+    margin: 0 auto;
+    max-width: 90%;
+}
