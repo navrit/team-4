@@ -32,20 +32,18 @@ io.on('connection', function (socket) {
         });
 });
 
-new CronJob('*/30 * * * * *', function() {
+new CronJob('*/10 * * * * *', function() {
     if (io.sockets.sockets.length > 0) {
         var date = new Date().toISOString();
         var dateSplit = date.split('T')
         dateSplit[1] = dateSplit[1].split('.')[0];
 
         request
-            .get('http://ec2-54-78-230-185.eu-west-1.compute.amazonaws.com:8080/queryform/' + dateSplit.join(' '))
+            .get('http://ec2-54-78-230-185.eu-west-1.compute.amazonaws.com:8080/query')
             .end(function(err, res) {
                 if (err) {
                     console.error(err);
                 } else {
-                    console.log("Stuff")
-
                     io.emit('update', res.text);
                 }
             });
