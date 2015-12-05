@@ -1,6 +1,7 @@
 from twilio.rest import TwilioRestClient
-import MySQLdb as mdb
+#import MySQLdb as mdb
 import datetime
+import re
 
 # Account credentials here
 ACCOUNT_SID = "AC7dc57255a855140dc9c2552589345e81"
@@ -33,7 +34,12 @@ def fileHandling():
 def parse(text):
     # PARSE IT WITH REGEX >> ars;23;Uganda..... --> Name:ars Age:23 Location:Uganda
     
-    return time, name, age, location, phone, issuse, condtype
+    dataList = re.split(r';{1,}', text)
+    dataList = [re.sub(r'\n', ' ', attributes) for attributes in dataList]
+
+    
+
+    return dataList
 
 def inject(text):
     db = mdb.connect('127.0.0.1','root','jpmorgan','codeforgood')
