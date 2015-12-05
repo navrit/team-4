@@ -22,6 +22,8 @@ Date.prototype.niceDate = function() {
 };
 
 function displayPoints(data) {
+    console.log("Data");
+
     markers.forEach(function(marker) {
         marker.setVisible(false);
     });
@@ -34,11 +36,11 @@ function displayPoints(data) {
             var geocoder    = new google.maps.Geocoder;
             var infoWindow  = new google.maps.InfoWindow();
 
-            if (issue.location.split(',').length > 1) {
+            if (issue.location.split(',').length > 1 && !isNaN(parseFloat(issue.location.split(',')[0]))) {
                 marker = new google.maps.Marker({
                     position: {
-                        lat: parseInt(issue.location.split(',')[0]),
-                        lng: parseInt(issue.location.split(',')[1])
+                        lat: parseFloat(issue.location.split(',')[0]),
+                        lng: parseFloat(issue.location.split(',')[1])
                     },
                     map: map,
                     title: issue.name,
@@ -64,8 +66,9 @@ function displayPoints(data) {
                     'address': issue.location
                 }, function(results, status) {
                     if (results) {
-                        var lat = parseInt(results[0].geometry.location.lat());
-                        var lng = parseInt(results[0].geometry.location.lng());
+
+                        var lat = parseFloat(results[0].geometry.location.lat());
+                        var lng = parseFloat(results[0].geometry.location.lng());
 
                         marker = new google.maps.Marker({
                             position: {
@@ -118,6 +121,10 @@ socket.on('data', function (data) {
             maxZoom: 15
         });
     });
+});
+
+socket.on('update', function(data) {
+    displayPoints(data);
 });
 
 var angular = require('angular');

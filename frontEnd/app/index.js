@@ -32,7 +32,7 @@ io.on('connection', function (socket) {
         });
 });
 
-new CronJob('*/10 * * * * *', function() {
+new CronJob('*/5 * * * * *', function() {
     if (io.sockets.sockets.length > 0) {
         var date = new Date().toISOString();
         var dateSplit = date.split('T')
