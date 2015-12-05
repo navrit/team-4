@@ -1,9 +1,23 @@
 ''' 1. Get Twilio shit
-    2. Parse into Panda df
+    2. Parse into strings
     3. Slap into DB
     ________________
     1. Query DB
     2. Slap results into file
+    '''
+
+'''
+    Phone: from Twilio
+    Location(: --> GPS [51.2:41.4], else GoogleMap lookup),
+
+    Message: Location, condition type, issues (general purpose message), Name, Age
+
+    STRUCTURED SMS [ ; ]
+
+        Augustus;15;51.3,13.4;visual,mobility;No braille facilities at school;
+
+        Name;Age;[Lat,Lng]/[Place name];Condition types;Issue?;?
+        ;;89,67;;
     '''
 # -*- coding: utf-8 -*-
 import MySQLdb as mdb
