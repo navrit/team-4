@@ -1,5 +1,6 @@
 require('js-marker-clusterer');
 
+var _                   = require('lodash');
 var GoogleMapsLoader    = require('google-maps');
 var grapher             = require('./grapher');
 var io                  = require('socket.io-client');
@@ -12,11 +13,18 @@ var issues;
 var map;
 var markers = [];
 
-socket.on('data', function (data) {
-    console.log("Hello")
+Date.prototype.niceDate = function() {
+   var yyyy = this.getFullYear().toString();
+   var mm = (this.getMonth() + 1).toString();
+   var dd  = this.getDate().toString();
+   return (dd[1]?dd:"0"+dd[0]) + '/' + (mm[1]?mm:"0"+mm[0])  + '/' + yyyy;
+  };
 
+socket.on('data', function (data) {
     issues = data;
     GoogleMapsLoader.load(function(google) {
+        var geocoder = new google.maps.Geocoder;
+
         map = new google.maps.Map(document.getElementById('map'), {
             center: {
                 lat: 23.51033,
@@ -27,26 +35,43 @@ socket.on('data', function (data) {
 
         var marker, position;
         var infoWindow = new google.maps.InfoWindow();
-        var issues = JSON.parse(data);
+        JSON.parse(data).forEach(function(issue) {
+            issue.time = new Date(issue.time).niceDate();
+            issue.conditions = issue.condtype.split(',').join(', ');
 
-        for(var i = 0; i < issues.length; i += 1) {
-            position = new google.maps.LatLng(issues[i].location.lat, issues[i].location.lng);
+            geocoder.geocode({
+                'address': issue.location
+            }, function(results, status) {
+                var lat = parseInt(results[0].geometry.location.lat());
+                var lng = parseInt(results[0].geometry.location.lng());
 
-            marker = new google.maps.Marker({
-                position: position,
-                map: map,
-                title: issues[i].issue
+                marker = new google.maps.Marker({
+                    position: {
+                        lat: lat,
+                        lng: lng
+                    },
+                    map: map,
+                    title: issue.name
+                });
+
+                console.log(issue);
+
+                google.maps.event.addListener(marker, 'click', (function(marker) {
+                    var tempString  = '<h3><%= name %> <i>(<%= age %>)</i>: <%= time %></h3>';
+                        tempString += '<p><strong>Issues:</strong> <%= issues %></p>';
+                        tempString += '<p><strong>Condition:</strong> <%= conditions %></p>';
+                        tempString += '<p><strong>Contact:</strong> <%= phone %></p>';
+                    var template = _.template(tempString);
+
+                    return function() {
+                        infoWindow.setContent(template(issue));
+                        infoWindow.open(map, marker);
+                    }
+                })(marker));
+
+                markers.push(marker);
             });
-
-            google.maps.event.addListener(marker, 'click', (function(marker, i) {
-                return function() {
-                    infoWindow.setContent(issues[i].issue);
-                    infoWindow.open(map, marker);
-                }
-            })(marker, i));
-
-            markers.push(marker);
-        }
+        });
 
         var mc = new MarkerClusterer(map, markers, {
             gridSize: 50,
