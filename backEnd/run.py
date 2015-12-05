@@ -1,4 +1,5 @@
 from flask import Flask
+from getSQL import SQLObject
 app = Flask(__name__)
 
 @app.route("/")
@@ -12,7 +13,11 @@ def query():
 
 @app.route('/queryfrom/<time>', methods=['GET'])
 def queryfrom(time):
-  return time
+  query = 'SELECT * FROM codeforgood.data WHERE time > "%s"' % time
+  sql = SQLObject(query)
+  print query
+  print (sql.get())
+  return str(sql.get())
 
 @app.route('/sms', methods=['POST'])
 def sms():
