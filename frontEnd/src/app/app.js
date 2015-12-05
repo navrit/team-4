@@ -111,14 +111,14 @@ socket.on('data', function (data) {
                 lat: 23.51033,
                 lng: 90.24176
             },
-            zoom: 2
+            zoom: 4
         });
 
         displayPoints(data);
 
         var mc = new MarkerClusterer(map, markers, {
             gridSize: 50,
-            maxZoom: 15
+            maxZoom: 10
         });
     });
 });
