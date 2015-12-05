@@ -1,8 +1,8 @@
 require('js-marker-clusterer');
 
 var _                   = require('lodash');
+var angular             = require('angular');
 var GoogleMapsLoader    = require('google-maps');
-var grapher             = require('./grapher');
 var io                  = require('socket.io-client');
 var socket              = io.connect('http://localhost:8080');
 
@@ -11,6 +11,7 @@ GoogleMapsLoader.SENSOR = false;
 
 var issues;
 var map;
+var filters;
 var markers = [];
 var marker, position;
 
@@ -22,8 +23,6 @@ Date.prototype.niceDate = function() {
 };
 
 function displayPoints(data) {
-    console.log("Data");
-
     markers.forEach(function(marker) {
         marker.setVisible(false);
     });
@@ -94,6 +93,39 @@ function displayPoints(data) {
                         })(marker));
 
                         markers.push(marker);
+                        var issues = marker.issue.issues;
+
+                        values = [];
+
+                        if (filters.education) {
+                            values.push(/school/g);
+                            values.push(/assistence/g);
+                            values.push(/learn/g);
+                        }
+
+                        if (filters.economics) {
+                            values.push(/growth/g);
+                            values.push(/money/g);
+                            values.push(/work/g);
+                        }
+
+                        if (filters.education && filters.economics) {
+                            marker.setVisible(true);
+                        } else {
+                            var tests = values.map(function(value) {
+                                return issues.match(value)
+                            }).map(function(result) {
+                                return result !== null;
+                            }).filter(function(truth) {
+                                return truth;
+                            });
+
+                            if (tests.length > 0) {
+                                marker.setVisible(true);
+                            } else {
+                                marker.setVisible(false);
+                            }
+                        }
                     }
                 });
             }
@@ -111,7 +143,7 @@ socket.on('data', function (data) {
                 lat: 23.51033,
                 lng: 90.24176
             },
-            zoom: 4
+            zoom: 3
         });
 
         displayPoints(data);
@@ -122,12 +154,6 @@ socket.on('data', function (data) {
         });
     });
 });
-
-socket.on('update', function(data) {
-    displayPoints(data);
-});
-
-var angular = require('angular');
 
 var app = angular.module('add', [])
     .controller('controller', [
@@ -145,39 +171,44 @@ var app = angular.module('add', [])
 
             $scope.$watch(function() {
                 return $scope.filters;
-            }, function() {
+            }, function(newVal) {
+                filters = $scope.filters;
+
                 for (var i = 0; i < markers.length; i += 1) {
                     var marker = markers[i];
-                    var values = [];
-                    var result = [];
+                    var issues = marker.issue.issues;
 
-                    if ($scope.filters.education) {
-                        values.push("school");
-                        values.push("books");
-                        values.push("teaching");
+                    values = [];
+
+                    if (filters.education) {
+                        values.push(/school/g);
+                        values.push(/assistence/g);
+                        values.push(/learn/g);
                     }
 
-                    if ($scope.filters.economics) {
-                        values.push("work");
-                        values.push("job");
-                        values.push("pay");
-                        values.push("employer")
+                    if (filters.economics) {
+                        values.push(/growth/g);
+                        values.push(/money/g);
+                        values.push(/work/g);
                     }
 
-                    if ($scope.filters['green cities']) {
-                        values.push("waste")
-                        values.push("rubbish")
-                        values.push("garbage")
-                        values.push("sewage")
-                    }
+                    if (filters.education && filters.economics) {
+                        marker.setVisible(true);
+                    } else {
+                        var tests = values.map(function(value) {
+                            return issues.match(value)
+                        }).map(function(result) {
+                            return result !== null;
+                        }).filter(function(truth) {
+                            return truth;
+                        });
 
-                    values.forEach(function(test) {
-                        if (marker.issue.issues.indexOf(test) > -1) {
+                        if (tests.length > 0) {
                             marker.setVisible(true);
                         } else {
                             marker.setVisible(false);
                         }
-                    });
+                    }
                 }
             }, true);
         }
