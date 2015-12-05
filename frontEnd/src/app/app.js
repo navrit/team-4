@@ -13,6 +13,8 @@ var map;
 var markers = [];
 
 socket.on('data', function (data) {
+    console.log("Hello")
+
     issues = data;
     GoogleMapsLoader.load(function(google) {
         map = new google.maps.Map(document.getElementById('map'), {
@@ -53,11 +55,11 @@ socket.on('data', function (data) {
     });
 });
 
-// socket.on('update', function(data) {
-//     if (markers.length > 0) {
-//         console.log(data.message);
-//     }
-// });
+socket.on('update', function(data) {
+    if (markers.length > 0) {
+        console.log(data.message);
+    }
+});
 
 var angular = require('angular');
 
@@ -74,6 +76,12 @@ var app = angular.module('add', [])
             };
 
             $scope.goals = Object.keys($scope.filters);
+
+            $scope.$watch(function() {
+                return $scope.filters;
+            }, function() {
+                console.log("Typo moe");
+            }, true);
         }
     ]).filter('capitalize', function() {
         return function(value) {

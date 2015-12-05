@@ -1,11 +1,6 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <!-- Latest compiled and minified CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-
-        <!-- Optional theme -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" href="./application.min.css">
     </head>
     <body>
@@ -21,7 +16,7 @@
                     <form class="c c--1-of-1">
                         <div class="input-group" ng-repeat="goal in goals">
                             <label>
-                                <input type="checkbox" ng-model="filters[goal]" ng-change="string">
+                                <input type="checkbox" ng-model="filters[goal]" >
                                 {{ goal | capitalize }}
                             </label>
                         </div>
@@ -35,8 +30,6 @@
             </div>
         </div>
 
-        <script type="text/javascript" src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/plottable.js/1.16.2/plottable.min.js"></script>
         <script type="text/javascript" src='./application.min.js'></script>
     </body>
 </html>
