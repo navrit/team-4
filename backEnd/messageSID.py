@@ -45,7 +45,7 @@ def inject(text):
     cursor = db.cursor()
     # Parse then inject into database
     print text
-    time, name, age, location, phone, issue, condtypes = parse(text)
+    name, age, location, phone, issue, condtype = parse(text)
     ''' SAMPLE DATA
     name = "Augustus"
     age = "14"
@@ -54,7 +54,8 @@ def inject(text):
     issue = "No braille access at work"
     condtype = "Visually impaired, wheelchair" '''
     # Inject into database
-    query = "INSERT INTO codeforgood.data VALUES('{}','{}','{}','{}','{}','{}');".format(name, age, location, phone, issue, condtype)
+    query = "INSERT INTO codeforgood.data(name, age, location, phone, issues, condtype) VALUES('{}','{}','{}','{}','{}','{}');".format(name, age, location, phone, issue, condtype)
+    print query
     cursor.execute(query)
     db.commit()
     print ">> SUCCESS: New data in DB"
