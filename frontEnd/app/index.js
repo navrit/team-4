@@ -32,24 +32,22 @@ io.on('connection', function (socket) {
         });
 });
 
-// new CronJob('*/3 * * * * *', function() {
-//     if (io.sockets.sockets.length > 0) {
-//         var date = new Date().toISOString();
-//         var dateSplit = date.split('T')
-//         dateSplit[1] = dateSplit[1].split('.')[0];
-//
-//         request
-//             .get('http://ec2-54-78-230-185.eu-west-1.compute.amazonaws.com:8080/queryform/' + dateSplit.join(' '))
-//             .end(function(err, res) {
-//                 if (err) {
-//                     console.error(err);
-//                 } else {
-//                     socket.emit('data', res.text);
-//                 }
-//             });
-//
-//         io.emit('update', {
-//             message: "Hello World!"
-//         });
-//     }
-// }, null, true, 'Europe/London');
+new CronJob('*/30 * * * * *', function() {
+    if (io.sockets.sockets.length > 0) {
+        var date = new Date().toISOString();
+        var dateSplit = date.split('T')
+        dateSplit[1] = dateSplit[1].split('.')[0];
+
+        request
+            .get('http://ec2-54-78-230-185.eu-west-1.compute.amazonaws.com:8080/queryform/' + dateSplit.join(' '))
+            .end(function(err, res) {
+                if (err) {
+                    console.error(err);
+                } else {
+                    console.log("Stuff")
+
+                    io.emit('update', res.text);
+                }
+            });
+    }
+}, null, true, 'Europe/London');

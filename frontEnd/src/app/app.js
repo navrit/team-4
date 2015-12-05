@@ -51,7 +51,8 @@ socket.on('data', function (data) {
                         lng: lng
                     },
                     map: map,
-                    title: issue.name
+                    title: issue.name,
+                    issue: issue
                 });
 
                 console.log(issue);
@@ -105,7 +106,21 @@ var app = angular.module('add', [])
             $scope.$watch(function() {
                 return $scope.filters;
             }, function() {
-                console.log("Typo moe");
+                console.log("Filter")
+
+                for (var i = 0; i < markers.length; i += 1) {
+                    var marker = markers[i];
+
+                    marker.setVisible(false);
+
+                    function filterMap(marker) {
+                        return
+                    }
+
+                    if (_.intersection(filterMap(marker)).length > 0) {
+                        marker.setVisible(true);
+                    }
+                }
             }, true);
         }
     ]).filter('capitalize', function() {
