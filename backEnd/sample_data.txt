@@ -1,0 +1,5 @@
+"Simon Jones;34;14.677556,28.022996;0283709241;unequal pay;autism"
+"Mitra Thakur;12;15 M.U.Bhuyan Rd Kushtia Bangladesh; 0128736193;sexist teacher;downs syndrome"
+"Dara Keo;28;12.344707, 104.575722;0987645219;physical abuse by family;epilepsy"
+"Hakima Enzi;50;Ikungu Tanzania;04786713521;no wheelchair ramp at local shop;paralysis"
+"Joyce;17;4.837888, 31.496053;08197862459;hungry and lack of shelter;deaf"

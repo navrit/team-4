@@ -12,50 +12,38 @@ GoogleMapsLoader.SENSOR = false;
 var issues;
 var map;
 var markers = [];
+var marker, position;
 
 Date.prototype.niceDate = function() {
    var yyyy = this.getFullYear().toString();
    var mm = (this.getMonth() + 1).toString();
    var dd  = this.getDate().toString();
    return (dd[1]?dd:"0"+dd[0]) + '/' + (mm[1]?mm:"0"+mm[0])  + '/' + yyyy;
-  };
+};
 
-socket.on('data', function (data) {
-    issues = data;
-    GoogleMapsLoader.load(function(google) {
-        var geocoder = new google.maps.Geocoder;
+function displayPoints(data) {
+    markers.forEach(function(marker) {
+        marker.setVisible(false);
+    });
 
-        map = new google.maps.Map(document.getElementById('map'), {
-            center: {
-                lat: 23.51033,
-                lng: 90.24176
-            },
-            zoom: 2
-        });
+    JSON.parse(data).forEach(function(issue) {
+        issue.time = new Date(issue.time).niceDate();
+        issue.conditions = issue.condtype.split(',').join(', ');
 
-        var marker, position;
-        var infoWindow = new google.maps.InfoWindow();
-        JSON.parse(data).forEach(function(issue) {
-            issue.time = new Date(issue.time).niceDate();
-            issue.conditions = issue.condtype.split(',').join(', ');
+        GoogleMapsLoader.load(function(google) {
+            var geocoder    = new google.maps.Geocoder;
+            var infoWindow  = new google.maps.InfoWindow();
 
-            geocoder.geocode({
-                'address': issue.location
-            }, function(results, status) {
-                var lat = parseInt(results[0].geometry.location.lat());
-                var lng = parseInt(results[0].geometry.location.lng());
-
+            if (issue.location.split(',').length > 1) {
                 marker = new google.maps.Marker({
                     position: {
-                        lat: lat,
-                        lng: lng
+                        lat: parseInt(issue.location.split(',')[0]),
+                        lng: parseInt(issue.location.split(',')[1])
                     },
                     map: map,
                     title: issue.name,
                     issue: issue
                 });
-
-                console.log(issue);
 
                 google.maps.event.addListener(marker, 'click', (function(marker) {
                     var tempString  = '<h3><%= name %> <i>(<%= age %>)</i>: <%= time %></h3>';
@@ -71,20 +59,65 @@ socket.on('data', function (data) {
                 })(marker));
 
                 markers.push(marker);
-            });
+            } else {
+                geocoder.geocode({
+                    'address': issue.location
+                }, function(results, status) {
+                    if (results) {
+                        var lat = parseInt(results[0].geometry.location.lat());
+                        var lng = parseInt(results[0].geometry.location.lng());
+
+                        marker = new google.maps.Marker({
+                            position: {
+                                lat: lat,
+                                lng: lng
+                            },
+                            map: map,
+                            title: issue.name,
+                            issue: issue
+                        });
+
+                        google.maps.event.addListener(marker, 'click', (function(marker) {
+                            var tempString  = '<h3><%= name %> <i>(<%= age %>)</i>: <%= time %></h3>';
+                                tempString += '<p><strong>Issues:</strong> <%= issues %></p>';
+                                tempString += '<p><strong>Condition:</strong> <%= conditions %></p>';
+                                tempString += '<p><strong>Contact:</strong> <%= phone %></p>';
+                            var template = _.template(tempString);
+
+                            return function() {
+                                infoWindow.setContent(template(issue));
+                                infoWindow.open(map, marker);
+                            }
+                        })(marker));
+
+                        markers.push(marker);
+                    }
+                });
+            }
         });
+    });
+}
+
+socket.on('data', function (data) {
+    issues = data;
+    GoogleMapsLoader.load(function(google) {
+        var geocoder = new google.maps.Geocoder;
+
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: {
+                lat: 23.51033,
+                lng: 90.24176
+            },
+            zoom: 2
+        });
+
+        displayPoints(data);
 
         var mc = new MarkerClusterer(map, markers, {
             gridSize: 50,
             maxZoom: 15
         });
     });
-});
-
-socket.on('update', function(data) {
-    if (markers.length > 0) {
-        console.log(data.message);
-    }
 });
 
 var angular = require('angular');
@@ -97,7 +130,7 @@ var app = angular.module('add', [])
                 'education': true,
                 'economics': true,
                 'social': true,
-                'rescources': true,
+                'green cities': true,
                 'monitoring': true
             };
 
@@ -106,20 +139,38 @@ var app = angular.module('add', [])
             $scope.$watch(function() {
                 return $scope.filters;
             }, function() {
-                console.log("Filter")
-
                 for (var i = 0; i < markers.length; i += 1) {
                     var marker = markers[i];
+                    var values = [];
+                    var result = [];
 
-                    marker.setVisible(false);
-
-                    function filterMap(marker) {
-                        return
+                    if ($scope.filters.education) {
+                        values.push("school");
+                        values.push("books");
+                        values.push("teaching");
                     }
 
-                    if (_.intersection(filterMap(marker)).length > 0) {
-                        marker.setVisible(true);
+                    if ($scope.filters.economics) {
+                        values.push("work");
+                        values.push("job");
+                        values.push("pay");
+                        values.push("employer")
                     }
+
+                    if ($scope.filters['green cities']) {
+                        values.push("waste")
+                        values.push("rubbish")
+                        values.push("garbage")
+                        values.push("sewage")
+                    }
+
+                    values.forEach(function(test) {
+                        if (marker.issue.issues.indexOf(test) > -1) {
+                            marker.setVisible(true);
+                        } else {
+                            marker.setVisible(false);
+                        }
+                    });
                 }
             }, true);
         }
