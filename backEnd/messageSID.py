@@ -37,8 +37,6 @@ def parse(text):
     dataList = re.split(r';{1,}', text)
     dataList = [re.sub(r'\n', ' ', attributes) for attributes in dataList]
 
-    
-
     return dataList
 
 def inject(text):
