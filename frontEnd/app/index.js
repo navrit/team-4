@@ -3,6 +3,7 @@ var express     = require('express');
 var app         = express();
 var server      = require('http').Server(app);
 var io          = require('socket.io')(server);
+var request     = require('superagent');
 
 var port = process.port || 8080;
 
@@ -16,11 +17,13 @@ app.use('*', function(req, res) {
 });
 
 io.on('connection', function (socket) {
-    socket.emit('news', {
-        hello: 'world'
-    });
-
-    socket.on('my other event', function (data) {
-        console.log(data);
-    });
+    request
+        .get('http://ec2-54-78-230-185.eu-west-1.compute.amazonaws.com:8080/query')
+        .end(function(err, res) {
+            if (err) {
+                console.error(err);
+            } else {
+                socket.emit('data', res.text);
+            }
+        });
 });
