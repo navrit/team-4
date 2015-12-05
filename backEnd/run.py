@@ -27,12 +27,6 @@ def queryfrom(time):
 
 @app.route('/sms', methods=['GET'])
 def sms():
-    # client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
-    #
-    # messages = client.messages.list()
-    #
-    # print messages
-
     resp = twilio.twiml.Response()
     resp.message("Hello, Mobile Monkey")
     return str(resp)

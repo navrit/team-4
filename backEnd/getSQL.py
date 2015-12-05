@@ -1,11 +1,3 @@
-''' 1. Get Twilio shit
-    2. Parse into strings
-    3. Slap into DB
-    ________________
-    1. Query DB
-    2. Slap results into file
-    '''
-
 '''
     Phone: from Twilio
     Location(: --> GPS [51.2:41.4], else GoogleMap lookup),
