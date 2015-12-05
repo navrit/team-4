@@ -1,4 +1,7 @@
+require('js-marker-clusterer');
+
 var GoogleMapsLoader    = require('google-maps');
+var grapher             = require('./grapher');
 var io                  = require('socket.io-client');
 var socket              = io.connect('http://localhost:8080');
 
@@ -43,8 +46,6 @@ socket.on('data', function (data) {
             markers.push(marker);
         }
 
-        console.log(markers);
-
         var mc = new MarkerClusterer(map, markers, {
             gridSize: 50,
             maxZoom: 15
@@ -52,8 +53,32 @@ socket.on('data', function (data) {
     });
 });
 
-socket.on('update', function(data) {
-    if (markers.length > 0) {
-        console.log(data.message);
-    }
-});
+// socket.on('update', function(data) {
+//     if (markers.length > 0) {
+//         console.log(data.message);
+//     }
+// });
+
+var angular = require('angular');
+
+var app = angular.module('add', [])
+    .controller('controller', [
+        '$scope',
+        function($scope) {
+            $scope.filters = {
+                'education': true,
+                'economics': true,
+                'social': true,
+                'rescources': true,
+                'monitoring': true
+            };
+
+            $scope.goals = Object.keys($scope.filters);
+        }
+    ]).filter('capitalize', function() {
+        return function(value) {
+            return value.split(' ').map(function(word) {
+                return word[0].toUpperCase() + word.slice(1);
+            }).join(' ' );
+        }
+    });
