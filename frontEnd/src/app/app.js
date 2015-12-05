@@ -155,6 +155,10 @@ socket.on('data', function (data) {
     });
 });
 
+ window.addEventListener("resize", function() {
+     plot.redraw();
+});
+
 var app = angular.module('add', [])
     .controller('controller', [
         '$scope',
