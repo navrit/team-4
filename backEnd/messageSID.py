@@ -35,54 +35,60 @@ def fileHandling():
     try:
         writer.close() # Safely close the file
     except IOException as e:
-        print ">> IO ERROR" 
+        print ">> IO ERROR"
 
 def parse(text):
-    # PARSE IT WITH REGEX >> ars;23;Uganda..... --> Name:ars Age:23 Location:Uganda
+    dataList = re.split(r';{1,}', text) # Puts text into a list where each element is seperated by ;
+    dataList = [re.sub(r'\n', ' ', attributes) for attributes in dataList] # Gets rid of unwanted newline chars.
 
-    dataList = re.split(r';{1,}', text) #Puts text into a list where each element is seperated by ;
-    dataList = [re.sub(r'\n', ' ', attributes) for attributes in dataList] #Gets rid of unwanted newline chars.
-
-    name = dataList[0]
-    age = dataList[1]
-    location= dataList[2]
-    phone = dataList[3]
-    issue = dataList[4]
-    condtype = dataList[5]
+    # Assign relevant variables to
+    name = str(dataList[0])
+    age = int(dataList[1])
+    location= str(dataList[2])
+    phone = int(dataList[3])
+    issue = str(dataList[4])
+    condtype = str(dataList[5])
     return name, age, location, phone, issue, condtype
 
 def unpack(a, b, c, d, e, f, *rest):
-  return a, b, c, d, e, f, rest
+    return a, b, c, d, e, f, rest
 
-def inject(text):
-    db = mdb.connect('127.0.0.1','root','jpmorgan','codeforgood')
-    cursor = db.cursor()
-    # Parse then inject into database
-    print text
-    try:
-      name, age, location, phone, issue, condtype = parse(text)
-    except Exception as e:
-      print "Exception while parsing"
-      print e
-      return
-    ''' SAMPLE DATA
+
+    ''' SAMPLE DATA FOR INJECT
+
     name = "Augustus"
     age = "14"
     location = "Uganda High Commission, Nairobi, Kenya"
     phone = "254204445420"
     issue = "No braille access at work"
     condtype = "Visually impaired, wheelchair" '''
-    # Inject into database
-    query = "INSERT INTO codeforgood.data(name, age, location, phone, issues, condtype) VALUES(%s, %s, %s, %s, %s, %s);"
+
+    # Parse then inject into database
+def inject(text):
+    # Connect to local MySQL database on AWS EC2
+    db = mdb.connect('127.0.0.1','root','jpmorgan','codeforgood')
+    # Prepare a cursor to traverse the database and get rows
+    cursor = db.cursor()
     try:
-      cursor.execute(query, [name, age, location, phone, issue, condtype])
+        name, age, location, phone, issue, condtype = parse(text)
     except Exception as e:
-      print "Exception while inserting"
-      print e
-      return
+        print "Some exception while parsing: "
+        print e
+        return
+    query = "INSERT INTO codeforgood.data(name, age, location, phone, issues, condtype) VALUES(%s, %s, %s, %s, %s, %s);"
+    # Inject into database with MySQL
+    try:
+        cursor.execute(query, [name, age, location, phone, issue, condtype])
+    except Exception as e:
+        print "Some exception while inserting: "
+        print e
+        return
+    # Agree that the changes should be pushed/written to the database
     db.commit()
+    # Friendly, re-assuring SUCCESS message
     print ">> SUCCESS: New data in DB"
 
+# Always run as a main, never as a module
 if __name__ == '__main__':
-  print "running"
-  fileHandling()
+    print "Starting up..."
+    fileHandling()
